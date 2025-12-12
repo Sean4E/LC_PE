@@ -560,6 +560,12 @@
             border-color: var(--success);
             background: rgba(74, 222, 128, 0.1);
         }
+        .lesson-nav-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .lesson-progress-bar { flex: 1; min-width: 150px; height: 8px; background: var(--bg-darker); border-radius: 4px; overflow: hidden; }
+        .lesson-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--success)); border-radius: 4px; transition: width 0.3s ease; }
+        .lesson-counter { font-size: 0.85rem; color: var(--text-secondary); white-space: nowrap; }
+        .lesson-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+        .lesson-nav .btn { min-width: 120px; }
 
         @media (max-width: 768px) {
             .container {
@@ -868,7 +874,15 @@
                 <div class="topic-btn" onclick="loadTopicNotes('topic10')">Topic 10</div>
             </div>
 
+            <div class="lesson-nav-header" id="lessonNavHeader" style="display:none;">
+                <div class="lesson-progress-bar"><div class="lesson-progress-fill" id="lessonProgressFill"></div></div>
+                <span class="lesson-counter" id="lessonCounter">Lesson 1 of 8</span>
+            </div>
             <div id="topic-notes-content"></div>
+            <div class="lesson-nav" id="lessonNav" style="display:none;">
+                <button class="btn" id="prevLesson" onclick="navigatePELesson(-1)" disabled>← Previous</button>
+                <button class="btn" id="nextLesson" onclick="navigatePELesson(1)">Next →</button>
+            </div>
         </div>
 
         <!-- Practice Questions -->
@@ -965,6 +979,9 @@
         let userStreak = 1;
         let flashcardDeck = [];
         let currentCardIndex = 0;
+        let currentTopicLessons = [];
+        let currentLessonIndex = 0;
+        let currentTopicName = '';
 
         // ============================================
         // COMPLETE FLASHCARD DATABASE
@@ -3478,8 +3495,84 @@
         }
 
         function loadTopicNotes(topic) {
-            document.getElementById('topic-notes-content').innerHTML = TOPIC_NOTES[topic] || '<div class="glass-card"><p>Notes loading...</p></div>';
+            const content = TOPIC_NOTES[topic] || '<div class="glass-card"><p>Notes loading...</p></div>';
+            currentTopicName = topic;
+
+            // Parse content by h3 tags to create individual lessons
+            const parts = content.split(/<h3>([^<]+)<\/h3>/g);
+            currentTopicLessons = [];
+
+            // First part before any h3 is introduction
+            if (parts[0] && parts[0].trim()) {
+                currentTopicLessons.push({ title: 'Introduction', content: parts[0] });
+            }
+
+            // Each h3 and its following content becomes a lesson
+            for (let i = 1; i < parts.length; i += 2) {
+                if (parts[i]) {
+                    currentTopicLessons.push({
+                        title: parts[i],
+                        content: `<h3>${parts[i]}</h3>${parts[i + 1] || ''}`
+                    });
+                }
+            }
+
+            // If no lessons were created, use full content as single lesson
+            if (currentTopicLessons.length === 0) {
+                currentTopicLessons.push({ title: 'Topic Content', content: content });
+            }
+
+            currentLessonIndex = 0;
+            showCurrentPELesson();
             earnPoints(15, 'Studied Notes');
+        }
+
+        function showCurrentPELesson() {
+            const lesson = currentTopicLessons[currentLessonIndex];
+            const total = currentTopicLessons.length;
+
+            document.getElementById('topic-notes-content').innerHTML = lesson.content;
+
+            // Update progress bar
+            const progressPercent = ((currentLessonIndex + 1) / total) * 100;
+            document.getElementById('lessonProgressFill').style.width = progressPercent + '%';
+            document.getElementById('lessonCounter').textContent = `Lesson ${currentLessonIndex + 1} of ${total}`;
+
+            // Show/hide navigation elements
+            document.getElementById('lessonNavHeader').style.display = total > 1 ? 'flex' : 'none';
+            document.getElementById('lessonNav').style.display = total > 1 ? 'flex' : 'none';
+
+            // Update button states
+            document.getElementById('prevLesson').disabled = currentLessonIndex === 0;
+            const nextBtn = document.getElementById('nextLesson');
+
+            if (currentLessonIndex === total - 1) {
+                nextBtn.textContent = '✓ Complete Topic';
+                nextBtn.style.background = 'var(--success)';
+                nextBtn.style.color = 'white';
+            } else {
+                nextBtn.textContent = 'Next →';
+                nextBtn.style.background = '';
+                nextBtn.style.color = '';
+            }
+        }
+
+        function navigatePELesson(direction) {
+            const newIndex = currentLessonIndex + direction;
+            const total = currentTopicLessons.length;
+
+            if (newIndex >= 0 && newIndex < total) {
+                currentLessonIndex = newIndex;
+                showCurrentPELesson();
+                earnPoints(5, 'Lesson Progress');
+                document.getElementById('topic-notes-content').scrollIntoView({ behavior: 'smooth' });
+            } else if (newIndex >= total) {
+                // Completed all lessons
+                showNotification('🎉 Topic Complete! +50 XP');
+                earnPoints(50, 'Topic Complete');
+                currentTopicLessons = [];
+                currentLessonIndex = 0;
+            }
         }
 
         function generateSchedule() {
