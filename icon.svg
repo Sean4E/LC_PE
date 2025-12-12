@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4338ca"/>
+      <stop offset="100%" style="stop-color:#667eea"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="url(#bgGrad)"/>
+
+  <!-- Running track curves -->
+  <ellipse cx="256" cy="256" rx="180" ry="100" fill="none" stroke="#f093fb" stroke-width="24" opacity="0.3"/>
+  <ellipse cx="256" cy="256" rx="140" ry="70" fill="none" stroke="#f093fb" stroke-width="16" opacity="0.4"/>
+  <ellipse cx="256" cy="256" rx="100" ry="45" fill="none" stroke="#f093fb" stroke-width="10" opacity="0.5"/>
+
+  <!-- Runner silhouette -->
+  <g transform="translate(256, 260)">
+    <!-- Head -->
+    <circle cx="0" cy="-100" r="25" fill="white"/>
+    <!-- Body -->
+    <path d="M0,-75 L0,-25" stroke="white" stroke-width="12" stroke-linecap="round"/>
+    <!-- Arms running -->
+    <path d="M0,-60 L-40,-40 M0,-60 L35,-75" stroke="white" stroke-width="10" stroke-linecap="round"/>
+    <!-- Legs running -->
+    <path d="M0,-25 L-35,30 L-25,70 M0,-25 L40,20 L50,60" stroke="white" stroke-width="10" stroke-linecap="round"/>
+  </g>
+
+  <!-- Athletic equipment icons -->
+  <!-- Football -->
+  <circle cx="120" cy="120" r="30" fill="white" opacity="0.8"/>
+  <path d="M105,120 L135,120 M120,105 L120,135" stroke="url(#bgGrad)" stroke-width="3"/>
+
+  <!-- Basketball -->
+  <circle cx="392" cy="120" r="30" fill="#f97316" opacity="0.9"/>
+  <path d="M377,120 L407,120 M392,105 L392,135" stroke="black" stroke-width="2"/>
+  <path d="M380,108 Q392,120 380,132 M404,108 Q392,120 404,132" stroke="black" stroke-width="2" fill="none"/>
+
+  <!-- Dumbbell -->
+  <g transform="translate(392, 392)">
+    <rect x="-35" y="-8" width="70" height="16" rx="4" fill="white" opacity="0.8"/>
+    <rect x="-45" y="-15" width="15" height="30" rx="4" fill="white"/>
+    <rect x="30" y="-15" width="15" height="30" rx="4" fill="white"/>
+  </g>
+
+  <!-- Text "PE" -->
+  <text x="256" y="420" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="white" text-anchor="middle">PE</text>
+
+  <!-- LC badge -->
+  <g transform="translate(120, 392)">
+    <rect x="-40" y="-22" width="80" height="44" rx="12" fill="url(#accentGrad)"/>
+    <text x="0" y="8" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white" text-anchor="middle">LC</text>
+  </g>
+</svg>

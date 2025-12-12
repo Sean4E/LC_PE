@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCPE Complete Exam Mastery | Everything You Need to Ace the Exam</title>
+    <meta name="description" content="PEMaster LC - Interactive study app for Irish Leaving Cert Physical Education with flashcards, mind maps, quizzes, and exam practice.">
+    <meta name="theme-color" content="#667eea">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="apple-touch-icon" href="icon-192.svg">
+    <title>PEMaster LC | Leaving Cert Physical Education Study App</title>
     <style>
         * {
             margin: 0;
@@ -625,7 +630,7 @@
 <body>
     <header>
         <div class="header-content">
-            <div class="logo">🎓 LCPE Complete Mastery</div>
+            <div class="logo">🏃 PEMaster LC</div>
             <div class="stats-bar">
                 <div class="stat">
                     <span>🔥</span>
@@ -3701,8 +3706,15 @@
             loadPracticeQuestions();
             loadMindMap('topic1');
             loadTopicNotes('topic1');
-            showNotification('Welcome to LCPE Complete Mastery! 🎓');
+            showNotification('Welcome to PEMaster LC! 🎓');
         };
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed:', err));
+        }
     </script>
 </body>
 </html>
